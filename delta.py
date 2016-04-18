@@ -37,9 +37,7 @@ class Delta:
         while variacaoErro > self.tolerancia:
             erroTotal = 0
             for i in range(len(self.X)):
-                print self.w
-                print self.X[i]
-                yEstimado = 1 / (1 - np.exp(np.dot(self.w, self.X[i])))
+                yEstimado = 1 / (1 - np.exp(-np.dot(self.w, self.X[i])))
                 erro = np.abs(self.y[i] - yEstimado)
                 erroTotal += erro
                 self.w = self.ajustaPlano(self.w, erro, self.X[i])
@@ -51,8 +49,11 @@ class Delta:
         w = w + erro * self.eta * xi
         return w
 
-    def predict(self):
-        pass
+    def predict(self,X):
+        if np.dot(self.w,X) >= self.w[0]:
+            return 1
+        else:
+            return -1
 
 delta = Delta()
 delta.leTreino()
