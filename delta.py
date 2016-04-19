@@ -1,7 +1,8 @@
-
+#!/usr/bin/env python
 import numpy as np
 import random
 import csv
+import plot
 
 class Delta:
     def __init__(self, eta=0.05, tolerancia=0.1):
@@ -63,7 +64,7 @@ class Delta:
         X = np.array(X)
 
         print self.w, X
-        
+
         if np.dot(self.w,X) >= 0:
             return 1
         else:
@@ -78,3 +79,5 @@ Xteste = np.array(Xteste)
 
 for i in range(len(Xteste)):
     delta.predict(Xteste[i])
+
+plot.plot(delta.w, delta.w0)
