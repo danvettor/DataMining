@@ -34,6 +34,10 @@ class Delta:
             X.append(row)
         return X
 
+    def erro(self, y, yEstimado):
+        return np.abs(y - yEstimado)
+        
+
     def fit(self, X, y):
         erroAnterior = 0
         variacaoErro = 1
@@ -41,7 +45,7 @@ class Delta:
             erroTotal = 0
             for i in range(len(X)):
                 yEstimado = 1 / (1 - np.exp(-np.dot(self.w, X[i])))
-                erro = np.abs(y[i] - yEstimado)
+                erro = self.erro(y[i], yEstimado)
                 erroTotal += erro
                 self.w = self.ajustaPlano(self.w, erro, X[i])
                 self.w0 = self.w0 * self.eta * erro
