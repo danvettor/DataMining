@@ -4,7 +4,6 @@ import random
 import csv
 import plot
 
-
 class Delta:
     def __init__(self, eta = 0.05, tolerancia = 0.1):
         self.tolerancia = tolerancia
@@ -36,6 +35,13 @@ class Delta:
             X.append(row)
         return X
 
+    def error(self, y, yEstimado):
+        erro = 0.0
+        for i in xrange(len(y)):
+            erro += np.abs(y[i] - yEstimado[i]) 
+        return erro
+
+
     def fit(self, X, y):
         X = np.array(X)
         erroAnterior = 0
@@ -59,11 +65,10 @@ class Delta:
       
     def predict(self, X):
         X = np.array(X)
-
         if np.dot(self.w,X) >= 0:
-            return 1
+            return 0
         else:
-            return 2
+            return 1
 
 delta = Delta()
 Xtreino, y = delta.leTreino()
@@ -71,8 +76,8 @@ Xtreino = np.array(Xtreino)
 delta.fit(Xtreino, y)
 Xteste = delta.leTeste()
 Xteste = np.array(Xteste)
-
-for i in range(len(Xteste)):
-    delta.predict(Xteste[i])
-
+estimado = []
+for i in range(len(Xtreino)):
+    estimado.append(delta.predict(Xtreino[i]))
+print "erro : " + str(delta.error(y,estimado))
 plot.plot(delta.w, delta.w0)
