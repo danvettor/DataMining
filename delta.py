@@ -9,54 +9,59 @@ class Delta:
         self.eta = eta
         self.w = []
         self.w0 = random.uniform(-10,10)
-        self.y = []
+        
 
     def leTreino(self):
-        self.X = []
+        X = []
+        y = []
         cr = csv.reader(open("dataset.csv","rb"))
         for row in cr:
             row = row[0].split(';')
             for j in range(len(row)):
                 row[j] = float(row[j])
-            self.y.append(row.pop())
-            self.X.append(row)
+            y.append(row.pop())
+            X.append(row)
         self.w = [random.uniform(-10,10) for i in xrange(len(row))]
+        return (X,y)
         
     def leTeste(self):
-        self.X = []
+        X = []
         cr = csv.reader(open("test.csv","rb"))
         for row in cr:
             row = row[0].split(';')
             for j in range(len(row)):
                 row[j] = float(row[j])
-            self.X.append(row)
+            X.append(row)
+        return X
 
-    def fit(self):
+    def fit(self, X, y):
         erroAnterior = 0
         variacaoErro = 1
         while variacaoErro > self.tolerancia:
             erroTotal = 0
-            for i in range(len(self.X)):
-                yEstimado = 1 / (1 - np.exp(-np.dot(self.w, self.X[i])))
-                erro = np.abs(self.y[i] - yEstimado)
+            for i in range(len(X)):
+                yEstimado = 1 / (1 - np.exp(-np.dot(self.w, X[i])))
+                erro = np.abs(y[i] - yEstimado)
                 erroTotal += erro
-                self.w = self.ajustaPlano(self.w, erro, self.X[i])
+                self.w = self.ajustaPlano(self.w, erro, X[i])
                 self.w0 = self.w0 * self.eta * erro
             variacaoErro = np.abs(erroAnterior - erroTotal)
             erroAnterior = erroTotal
+        print self.w
 
     def ajustaPlano(self, w, erro, xi):
         w = w + erro * self.eta * xi
         return w
 
-    def predict(self,X):
-        if np.dot(self.w,X) >= self.w[0]:
+    def predict(self, X):
+        if np.dot(self.w,X) >= 0:
             return 1
         else:
-            return -1
+            return 2
 
 delta = Delta()
-delta.leTreino()
-delta.fit()
-delta.leTeste()
-delta.predict()
+Xtreino, y = delta.leTreino()
+delta.fit(Xtreino, y)
+Xteste = delta.leTeste()
+for i in range(len(Xteste)):
+    print(delta.predict(Xteste[i]))
