@@ -49,16 +49,13 @@ class Delta:
         while variacaoErro > self.tolerancia:
             erroTotal = 0
             for i in range(len(X)):
-                yEstimado = 1 / (1 + np.exp(-np.dot(self.w, X[i]) + self.w0))
+                yEstimado = 1 / (1 + np.exp(-np.dot(self.w, X[i])))
                 erro = y[i] - yEstimado
                 self.w0 = self.w0 * self.eta * erro        
                 self.w = self.ajustaPlano(self.w, erro, X[i])
                 erroTotal += erro
-                # print "erro do exemplo: " + str(i) + "= "+ str(erro)
-            # print "erro total: " + str(erroTotal)
             variacaoErro = np.abs(erroAnterior - erroTotal)
             erroAnterior = erroTotal
-            # print "variacao: " + str(variacaoErro)
 
     def ajustaPlano(self, w, erro, xi):
         return w + erro * self.eta * xi
