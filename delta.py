@@ -4,8 +4,9 @@ import random
 import csv
 import plot
 
+
 class Delta:
-    def __init__(self, eta=0.05, tolerancia=0.1):
+    def __init__(self, eta = 0.05, tolerancia = 0.1):
         self.tolerancia = tolerancia
         self.eta = eta
         self.w = []
@@ -35,10 +36,6 @@ class Delta:
             X.append(row)
         return X
 
-    def erro(self, y, yEstimado):
-        return np.abs(y - yEstimado)
-        
-
     def fit(self, X, y):
         X = np.array(X)
         erroAnterior = 0
@@ -46,20 +43,20 @@ class Delta:
         while variacaoErro > self.tolerancia:
             erroTotal = 0
             for i in range(len(X)):
-                yEstimado = 1 / (1 - np.exp(-np.dot(self.w, X[i])))
-                erro = self.erro(y[i], yEstimado)
-                erroTotal += erro
+                yEstimado = 1 / (1 + np.exp(-np.dot(self.w, X[i]) + self.w0))
+                erro = y[i] - yEstimado
+                self.w0 = self.w0 * self.eta * erro        
                 self.w = self.ajustaPlano(self.w, erro, X[i])
-                self.w0 = self.w0 * self.eta * erro
-            
+                erroTotal += erro
+                # print "erro do exemplo: " + str(i) + "= "+ str(erro)
+            # print "erro total: " + str(erroTotal)
             variacaoErro = np.abs(erroAnterior - erroTotal)
             erroAnterior = erroTotal
-            print erroAnterior
+            # print "variacao: " + str(variacaoErro)
 
     def ajustaPlano(self, w, erro, xi):
-        w = w + erro * self.eta * xi
-        return w
-
+        return w + erro * self.eta * xi
+      
     def predict(self, X):
         X = np.array(X)
 
