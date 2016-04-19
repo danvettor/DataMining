@@ -54,7 +54,7 @@ class Delta:
             
             variacaoErro = np.abs(erroAnterior - erroTotal)
             erroAnterior = erroTotal
-        print self.w
+            print erroAnterior
 
     def ajustaPlano(self, w, erro, xi):
         w = w + erro * self.eta * xi
@@ -62,8 +62,6 @@ class Delta:
 
     def predict(self, X):
         X = np.array(X)
-
-        print self.w, X
 
         if np.dot(self.w,X) >= 0:
             return 1
