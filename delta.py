@@ -21,7 +21,7 @@ class Delta:
                 row[j] = float(row[j])
             y.append(row.pop())
             X.append(row)
-        self.w = [random.uniform(-10,10) for i in xrange(len(row))]
+        self.w = np.array([random.uniform(-10,10) for i in xrange(len(row))])
         return (X,y)
         
     def leTeste(self):
@@ -39,6 +39,7 @@ class Delta:
         
 
     def fit(self, X, y):
+        X = np.array(X)
         erroAnterior = 0
         variacaoErro = 1
         while variacaoErro > self.tolerancia:
@@ -49,6 +50,7 @@ class Delta:
                 erroTotal += erro
                 self.w = self.ajustaPlano(self.w, erro, X[i])
                 self.w0 = self.w0 * self.eta * erro
+            
             variacaoErro = np.abs(erroAnterior - erroTotal)
             erroAnterior = erroTotal
         print self.w
@@ -58,6 +60,10 @@ class Delta:
         return w
 
     def predict(self, X):
+        X = np.array(X)
+
+        print self.w, X
+        
         if np.dot(self.w,X) >= 0:
             return 1
         else:
@@ -65,7 +71,10 @@ class Delta:
 
 delta = Delta()
 Xtreino, y = delta.leTreino()
+Xtreino = np.array(Xtreino)
 delta.fit(Xtreino, y)
 Xteste = delta.leTeste()
+Xteste = np.array(Xteste)
+
 for i in range(len(Xteste)):
-    print(delta.predict(Xteste[i]))
+    delta.predict(Xteste[i])
